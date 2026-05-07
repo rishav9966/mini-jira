@@ -2,19 +2,16 @@ from fastapi import FastAPI, Depends
 from app.db.deps import get_db
 from app.models.user import User
 
+from app.routes import users
+from app.routes import projects
+
 app = FastAPI()
+app.include_router(users.router)
+app.include_router(projects.router)
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-
-@app.post("/users/")
-def create_user(username: str, email: str, db=Depends(get_db)):
-    user = User(username=username, email=email)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
 
 
 if __name__ == "__main__":
