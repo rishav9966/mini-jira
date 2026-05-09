@@ -20,7 +20,7 @@ class User(Base):
     role = Column(String, default=Role.USER.value)
     projects = relationship("Project", back_populates="owner")
     created_issues = relationship(
-        "Issue", foreign_keys="Issue.created_by", back_populates="createor"
+        "Issue", foreign_keys="Issue.created_by", back_populates="creator"
     )
     assigned_issues = relationship(
         "Issue", foreign_keys="Issue.assigned_to", back_populates="assignee"

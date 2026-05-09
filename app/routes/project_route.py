@@ -22,7 +22,7 @@ def get_project_by_owner(owner_id: int, project_service=Depends(get_project_serv
     return project_service.get_projects_by_owner(owner_id=owner_id)
 
 
-@router.get("/{project_id}/issues", response_model=list[ProjectIssuesResponse])
+@router.get("/{project_id}/issues", response_model=ProjectIssuesResponse)
 def get_issues_by_project(
     project_id: int, project_service=Depends(get_project_service)
 ):

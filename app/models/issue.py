@@ -23,11 +23,11 @@ class Issue(Base):
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     assigned_to = Column(Integer, ForeignKey("users.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
     project = relationship("Project", back_populates="issues")
-    createor = relationship("User", foreign_keys=[created_by], back_populates="created_issues")
+    creator = relationship("User", foreign_keys=[created_by], back_populates="created_issues")
     assignee = relationship("User", foreign_keys=[assigned_to], back_populates="assigned_issues")
     
     def __repr__(self):
