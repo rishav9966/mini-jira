@@ -1,18 +1,21 @@
 from fastapi import APIRouter, Depends
-from app.db.deps import get_db
-from app.models.user import User
-from app.models.project import Project
+
+from app.deps import get_project_service
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 
 
 @router.post("/")
-def create_project(name: str, description: str, owner_id: int, db=Depends(get_db)):
-    owner = db.query(User).filter(User.id == owner_id).first()
-    if not owner:
-        raise ValueError("Owner not found")
-    project = Project(name=name, description=description, owner_id=owner_id)
-    db.add(project)
-    db.commit()
-    db.refresh(project)
-    return project
+def create_project(
+    name: str, description: str, owner_id: int, project_service=Depends(get_project_service)
+):
+    return project_service.create_project(name=name, description=description, owner_id=owner_id)
+
+
+@router.get("/{project_id}")
+def get_project(project_id: int, project_service=Depends(get_project_service)):
+    return project_service.get_project(project_id=project_id)
+
+@router.get("/owner/{owner_id}")
+def get_project_by_owner(owner_id: int, project_service=Depends(get_project_service)):
+    return project_service.get_projects_by_owner(owner_id=owner_id)
