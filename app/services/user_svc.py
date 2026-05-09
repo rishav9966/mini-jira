@@ -1,4 +1,3 @@
-from app.db.deps import get_db
 from app.repo.user_repo import UserRepository
 from app.schema.user_schema import UserCreate, UserResponse
 

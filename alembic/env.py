@@ -21,6 +21,7 @@ if config.config_file_name is not None:
 from app.db.base import Base
 from app.models import user
 from app.models import project
+from app.models import issue
 target_metadata = Base.metadata
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

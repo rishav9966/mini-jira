@@ -35,3 +35,11 @@ class ProjectRepository:
             .filter(Project.owner_id == owner_id)
             .all()
         )
+    
+    def get_issues_by_project(self, project_id: int):
+        return (
+            self.db.query(Project)
+            .filter(Project.id == project_id)
+            .options(joinedload(Project.issues))
+            .all()
+        )

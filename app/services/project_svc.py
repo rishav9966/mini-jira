@@ -1,7 +1,5 @@
-from app.models.project import Project
 from app.repo.project_repo import ProjectRepository
 from app.schema.project_schema import ProjectCreate, ProjectResponse
-
 
 class ProjectService:
     def __init__(self, db):
@@ -19,3 +17,7 @@ class ProjectService:
 
     def get_projects_by_owner(self, owner_id: int):
         return self.project_repo.get_projects_by_owner(owner_id)
+
+    def get_issues_by_project(self, project_id: int):
+        project = self.project_repo.get_issues_by_project(project_id)
+        return project

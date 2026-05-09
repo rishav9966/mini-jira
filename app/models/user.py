@@ -4,6 +4,7 @@ from enum import Enum
 
 from app.db.base import Base
 
+
 class Role(str, Enum):
     ADMIN = "admin"
     USER = "user"
@@ -12,12 +13,18 @@ class Role(str, Enum):
 
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     role = Column(String, default=Role.USER.value)
     projects = relationship("Project", back_populates="owner")
-    
+    created_issues = relationship(
+        "Issue", foreign_keys="Issue.created_by", back_populates="createor"
+    )
+    assigned_issues = relationship(
+        "Issue", foreign_keys="Issue.assigned_to", back_populates="assignee"
+    )
+
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}', role='{self.role}')>"
