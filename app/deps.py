@@ -1,7 +1,7 @@
 from fastapi import Depends
 from app.db.deps import get_db
-from app.services.projects import ProjectService
-from app.services.users import UserService
+from app.services.project_svc import ProjectService
+from app.services.user_svc import UserService
 
 def get_project_service(db=Depends(get_db)):
     return ProjectService(db)

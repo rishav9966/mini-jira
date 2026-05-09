@@ -1,15 +1,18 @@
 from app.models.project import Project
-from app.repo.projects import ProjectRepository
+from app.repo.project_repo import ProjectRepository
+from app.schema.project_schema import ProjectCreate, ProjectResponse
+
 
 class ProjectService:
     def __init__(self, db):
         self.db = db
         self.project_repo = ProjectRepository(db)
 
-    def create_project(self, name: str, description: str, owner_id: int):
-        project = self.project_repo.create_project(name, description, owner_id)
+    def create_project(self, project_data: ProjectCreate):
+        project = self.project_repo.create_project(project_data)
+        self.db.commit()
         self.db.refresh(project)
-        return project
+        return ProjectResponse.model_validate(project)
 
     def get_project(self, project_id: int):
         return self.project_repo.get_project(project_id)
