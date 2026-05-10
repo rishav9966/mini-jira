@@ -13,7 +13,10 @@ class ProjectRepository:
     def create_project(self, project_data: ProjectCreate):
         owner = self.db.query(User).filter(User.id == project_data.owner_id).first()
         if not owner:
-            raise ValueError(f"User with id {project_data.owner_id} does not exist.")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with id {project_data.owner_id} does not exist.",
+            )
         if owner.role != "admin":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -29,12 +32,18 @@ class ProjectRepository:
         return project
 
     def get_project(self, project_id: int):
-        return (
+        project = (
             self.db.query(Project)
             .filter(Project.id == project_id)
             .options(joinedload(Project.owner))
             .first()
         )
+        if not project:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Project with id {project_id} does not exist.",
+            )
+        return project
 
     def get_projects_by_owner(self, owner_id: int):
         return self.db.query(Project).filter(Project.owner_id == owner_id).all()

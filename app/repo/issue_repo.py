@@ -8,7 +8,6 @@ class IssueRepository:
         self.db = db
 
     def create_issue(self, issue_data):
-        issue = Issue(**issue_data.dict())
         project = self.db.query(Project).filter(Project.id == issue_data.project_id).first()
         if not project:
             raise HTTPException(
@@ -21,13 +20,14 @@ class IssueRepository:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with id {issue_data.created_by} does not exist."
             )
-        if not issue_data.assigned_to is None:
+        if issue_data.assigned_to is not None:
             assignee = self.db.query(User).filter(User.id == issue_data.assigned_to).first()
             if not assignee:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail=f"User with id {issue_data.assigned_to} does not exist."
                 )
+        issue = Issue(**issue_data.model_dump())
         self.db.add(issue)
         self.db.flush()
         return issue
